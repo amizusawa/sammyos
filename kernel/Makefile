@@ -1,0 +1,22 @@
+
+BUILD_DIR = ../build/kernel
+CFLAGS = -g
+C_SRCS = $(wildcard *.c)
+C_OBJS = $(C_SRCS:.c=.o)
+BUILD_C_OBJS = $(foreach file, $(C_OBJS), $(BUILD_DIR)/$(file))
+
+all: $(BUILD_DIR)/kernel.bin $(BUILD_DIR)/kernel.elf
+
+$(BUILD_DIR)/%.o: %.c
+	@ mkdir -p $(BUILD_DIR)
+	i386-elf-gcc $(CFLAGS) -ffreestanding -c $< -o $@
+
+$(BUILD_DIR)/kernel_entry.o: kernel_entry.asm
+	@ mkdir -p $(BUILD_DIR)
+	nasm $< -f elf -o $@
+
+$(BUILD_DIR)/kernel.elf: $(BUILD_DIR)/kernel_entry.o $(BUILD_C_OBJS)
+	i386-elf-ld -o $@ -Ttext 0x1000 $^
+
+$(BUILD_DIR)/kernel.bin: $(BUILD_C_OBJS) $(BUILD_DIR)/kernel_entry.o
+	i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
