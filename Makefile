@@ -7,7 +7,7 @@ KERNEL_BIN = $(BUILD_DIR)/kernel/kernel.bin
 KERNEL_ELF = $(BUILD_DIR)/kernel/kernel.elf
 DISK_IMG = disk.img
 
-all: run
+all: bootdisk
 
 .PHONY: run bootdisk bootsect kernel clean spotless debug drivers
 
@@ -24,13 +24,12 @@ bootdisk: bootsect kernel
 	dd if=/dev/zero of=$(DISK_IMG) bs=512 count=2880
 	dd conv=notrunc if=$(BOOTSECT_BIN) of=$(DISK_IMG) bs=512 count=1 seek=0
 	dd conv=notrunc if=$(KERNEL_BIN) of=$(DISK_IMG) bs=512 count=1 seek=1
-
-run: bootdisk 
-	qemu-system-i386 -fda $(DISK_IMG)
+run: 
+	qemu-system-i386 -s -fda $(DISK_IMG) -S
 
 debug: bootdisk
-	qemu-system-i386 -gdb tcp::8080  -fda $(DISK_IMG) -S &
-	i386-elf-gdb -ex "target remote localhost:8080" -ex "symbol-file $(KERNEL_ELF)"
+	qemu-system-i386 -s -fda $(DISK_IMG) -S &
+	i386-elf-gdb -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_ELF)"
 
 clean: 
 	rm -rf build/
