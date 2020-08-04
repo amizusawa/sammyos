@@ -16,9 +16,9 @@ KERNEL_OFFSET equ 0x1000
     mov dl, 79
     int 10h
 
-    mov ah, 01h
-    mov ch, 3fh
-    int 10h
+    ;mov ah, 01h
+    ;mov ch, 3fh
+    ;int 10h
 
     call load_kernel
     call switch_to_pm
