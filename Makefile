@@ -1,7 +1,5 @@
 
 BUILD_DIR = build
-BUILD_KERNEL_DIR = $(BUILD_DIR)/kernel
-BUILD_BOOT_DIR = $(BUILD_DIR)/boot
 BOOTSECT_BIN = $(BUILD_DIR)/boot/bootsect.bin
 KERNEL_BIN = $(BUILD_DIR)/kernel/kernel.bin
 KERNEL_ELF = $(BUILD_DIR)/kernel/kernel.elf
@@ -24,12 +22,14 @@ bootdisk: bootsect kernel
 	dd if=/dev/zero of=$(DISK_IMG) bs=512 count=2880
 	dd conv=notrunc if=$(BOOTSECT_BIN) of=$(DISK_IMG) bs=512 count=1 seek=0
 	dd conv=notrunc if=$(KERNEL_BIN) of=$(DISK_IMG) bs=512 count=1 seek=1
-run: 
-	qemu-system-i386 -s -fda $(DISK_IMG) -S
 
-debug: bootdisk
+run:
+	qemu-system-i386 -fda $(DISK_IMG)
+
+debug:
 	qemu-system-i386 -s -fda $(DISK_IMG) -S &
-	i386-elf-gdb -ex "target remote localhost:1234" -ex "symbol-file $(KERNEL_ELF)"
+	sleep 1s
+	i386-elf-gdb
 
 clean: 
 	rm -rf build/
