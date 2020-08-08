@@ -1,4 +1,4 @@
 
-symbol-file ./build/kernel/kernel.elf
+symbol-file sammyos.bin
 target remote localhost:1234
 b main

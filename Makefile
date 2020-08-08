@@ -1,13 +1,17 @@
 
 BUILD_DIR = build
-BOOTSECT_BIN = $(BUILD_DIR)/boot/bootsect.bin
-KERNEL_BIN = $(BUILD_DIR)/kernel/kernel.bin
-KERNEL_ELF = $(BUILD_DIR)/kernel/kernel.elf
-DISK_IMG = disk.img
+MODULES = kernel drivers
+BOOT_OBJ = ./build/boot/boot.o
+OBJS = $(foreach dir, $(MODULES), $(wildcard $(BUILD_DIR)/$(dir)/*.o))
+C_FLAGS = -ffreestanding -g -nostdlib
+ISO_DIR = isodir
+OS = sammyos
+ISO = $(OS).iso
+OS_BIN = $(OS).bin
 
-all: bootdisk
+all: iso 
 
-.PHONY: run bootdisk bootsect kernel clean spotless debug drivers
+.PHONY: run iso bootsect kernel clean debug drivers
 
 bootsect: 
 	make -C boot
@@ -18,18 +22,24 @@ drivers:
 kernel: drivers
 	make -C kernel
 
-bootdisk: bootsect kernel
-	cat $(BOOTSECT_BIN) $(KERNEL_BIN) > $(DISK_IMG)
+iso: bootsect kernel
+	i386-elf-gcc -T linker.ld -o $(OS_BIN) $(C_FLAGS) $(BOOT_OBJ) $(OBJS) -lgcc
+	mkdir -p $(ISO_DIR)/boot/grub
+	cp $(OS_BIN) $(ISO_DIR)/boot/$(OS_BIN)
+	cp grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
+	grub-mkrescue -o $(ISO) $(ISO_DIR) 
 
-run:
-	qemu-system-i386 -fda $(DISK_IMG)
+run: 
+	qemu-system-i386 -s -cdrom $(ISO)
 
 debug:
-	qemu-system-i386 -s -fda $(DISK_IMG) -S &
+	qemu-system-i386 -s -S -cdrom $(ISO) &
 	sleep 0.5s
 	i386-elf-gdb
 
 clean: 
-	rm -rf build/
-	rm -f $(DISK_IMG)
+	rm -rf $(BUILD_DIR)
+	rm -rf $(ISO_DIR)
+	rm -f $(OS).*
+
 
