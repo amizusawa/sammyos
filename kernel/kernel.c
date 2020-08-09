@@ -1,9 +1,14 @@
 #include "../drivers/screen.h"
 
 void main() {
-    
-    kprint_at("hello", 1, 1);
-    kprint_at("this spans multiple lines", 10, 75);
-    char* test = "this is a test\n";
-    kprint_at(test, 2, 0);
+
+    char* c = "A\n";
+    for (int i = 0; i < 25; i++) {
+        kprint(c);
+        c[0] = c[0]+1;
+    }
+
+    char* string = "helloooooooooooooooooooooo this line should scroll\n";
+    kprint_at(string, 24, 78);
+
 }

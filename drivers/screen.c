@@ -8,6 +8,7 @@ int get_offset(int row, int col);
 int get_offset_row(int offset);
 int get_offset_col(int offset);
 int print_char(char c, int row, int col, char attr);
+void screen_scroll();
 
 void kprint_at(char* message, int row, int col) {
     int offset;
@@ -30,6 +31,10 @@ void kprint_at(char* message, int row, int col) {
     }
 }
 
+void kprint(char* message) {
+    kprint_at(message, -1, -1);
+}
+
 int print_char(char c, int row, int col, char attr) {
     unsigned char* video_memory = (unsigned char*) VIDEO_MEMORY;
     if (!attr) {
@@ -37,8 +42,11 @@ int print_char(char c, int row, int col, char attr) {
     }
 
     if (col >= MAX_COLS || row >= MAX_ROWS) {
-        video_memory[2 * MAX_COLS * MAX_ROWS - 2] = 'E';
-        video_memory[2 * MAX_COLS * MAX_ROWS - 1] = 0xf4;
+        //video_memory[2 * MAX_COLS * MAX_ROWS - 2] = 'E';
+        //video_memory[2 * MAX_COLS * MAX_ROWS - 1] = 0xf4;
+        screen_scroll();
+        row--;
+        col = 0;
     }
 
     int offset;
@@ -60,6 +68,32 @@ int print_char(char c, int row, int col, char attr) {
     }
     set_cursor_offset(offset);
     return offset;
+}
+
+void screen_scroll() {
+    unsigned char* video_memory = (unsigned char*) VIDEO_MEMORY;
+
+    int col = 0;
+    int row = 0;
+    int offset, offset_next_line;
+    while (row < MAX_ROWS-1) {
+        col = 0;
+        while (col < MAX_COLS) {
+            offset = get_offset(row, col);
+            offset_next_line = get_offset(row+1, col);
+            video_memory[offset] = video_memory[offset_next_line];
+            video_memory[offset+1] = video_memory[offset_next_line+1];
+            col++;
+        }
+        row++;
+    }
+    col = 0;
+    while (col < MAX_COLS) {
+        offset = get_offset(row, col);
+        video_memory[offset] = ' ';
+        video_memory[offset+1] = WHITE_ON_BLACK;
+        col++;
+    }
 }
 
 int get_cursor_offset() {

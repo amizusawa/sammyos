@@ -7,3 +7,4 @@
 #define REG_SCREEN_DATA 0x3d5
 
 void kprint_at(char* message, int row, int col);
+void kprint(char* message);
