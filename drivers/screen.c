@@ -96,6 +96,21 @@ void screen_scroll() {
     }
 }
 
+void screen_clear() {
+    unsigned char* video_memory = (unsigned char*) VIDEO_MEMORY;
+
+    int offset;
+    for (int row = 0; row < MAX_ROWS; row++) {
+        for (int col = 0; col < MAX_COLS; col++) {
+            offset = get_offset(row, col);
+            video_memory[offset] = ' ';
+            video_memory[offset+1] = WHITE_ON_BLACK;
+        }
+    }
+
+    set_cursor_offset(get_offset(0,0));
+}
+
 int get_cursor_offset() {
     port_byte_out(REG_SCREEN_CTRL, 14);
     int offset = port_byte_in(REG_SCREEN_DATA) << 8;

@@ -15,5 +15,5 @@ void main() {
     kprint(buffer);
     kprint("\n");
 
-
+    screen_clear();
 }

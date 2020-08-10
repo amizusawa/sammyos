@@ -8,3 +8,4 @@
 
 void kprint_at(char* message, int row, int col);
 void kprint(char* message);
+void screen_clear();
