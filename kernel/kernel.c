@@ -1,14 +1,19 @@
 #include "../drivers/screen.h"
+#include "utils.h"
 
 void main() {
+    char buffer[255];
+    int_to_ascii(254, buffer);
+    kprint(buffer);
+    kprint("\n");
 
-    char* c = "A\n";
-    for (int i = 0; i < 25; i++) {
-        kprint(c);
-        c[0] = c[0]+1;
-    }
+    int_to_ascii(10, buffer);
+    kprint(buffer);
+    kprint("\n");
 
-    char* string = "helloooooooooooooooooooooo this line should scroll\n";
-    kprint_at(string, 24, 78);
+    int_to_ascii(-10, buffer);
+    kprint(buffer);
+    kprint("\n");
+
 
 }
