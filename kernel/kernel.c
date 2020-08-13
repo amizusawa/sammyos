@@ -1,6 +1,6 @@
 #include "../drivers/screen.h"
 #include "utils.h"
-#include "../cpu/gdt.h"
+#include "../cpu/descriptor_tables.h"
 
 void main() {
 
@@ -18,5 +18,6 @@ void main() {
     int_to_ascii(-10, buffer);
     kprint(buffer);
     kprint("\n");
-
+    
+    __asm__ __volatile__("int $2");
 }
