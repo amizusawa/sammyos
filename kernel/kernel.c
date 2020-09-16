@@ -1,23 +1,13 @@
 #include "../drivers/screen.h"
 #include "utils.h"
 #include "../cpu/descriptor_tables.h"
+#include "../drivers/timer.h"
 
-void main() {
+void kernel_main() {
 
     init_descriptor_tables();
 
-    char buffer[255];
-    int_to_ascii(254, buffer);
-    kprint(buffer);
-    kprint("\n");
+    asm volatile("sti");
+    init_timer(50);
 
-    int_to_ascii(10, buffer);
-    kprint(buffer);
-    kprint("\n");
-
-    int_to_ascii(-10, buffer);
-    kprint(buffer);
-    kprint("\n");
-    
-    __asm__ __volatile__("int $2");
 }
