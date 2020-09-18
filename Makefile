@@ -1,6 +1,6 @@
 
-BUILD_DIR = build
-MODULES = kernel drivers cpu
+BUILD_DIR = ./build
+MODULES = kernel drivers cpu libc
 BOOT_OBJ = ./build/boot/boot.o
 OBJS = $(foreach dir, $(MODULES), $(wildcard $(BUILD_DIR)/$(dir)/*.o))
 C_FLAGS = -ffreestanding -g -nostdlib
@@ -11,7 +11,7 @@ OS_BIN = $(OS).bin
 
 all: iso 
 
-.PHONY: run iso bootsect kernel clean debug drivers cpu
+.PHONY: run iso bootsect kernel clean debug drivers cpu libc
 
 bootsect: 
 	make -C boot
@@ -22,7 +22,10 @@ drivers:
 cpu:
 	make -C cpu
 
-kernel: drivers cpu
+libc:
+	make -C libc
+
+kernel: drivers cpu libc
 	make -C kernel
 
 iso: bootsect kernel

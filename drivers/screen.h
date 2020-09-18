@@ -1,3 +1,5 @@
+#ifndef SCREEN_H
+#define SCREEN_H
 
 #define VIDEO_MEMORY 0xb8000
 #define MAX_ROWS 25
@@ -9,3 +11,5 @@
 void kprint_at(char* message, int row, int col);
 void kprint(char* message);
 void screen_clear();
+
+#endif

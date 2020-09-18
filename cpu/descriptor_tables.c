@@ -1,5 +1,5 @@
 #include "descriptor_tables.h"
-#include "../kernel/utils.h"
+#include "../libc/mem.h"
 #include "../drivers/ports.h"
 
 extern void gdt_flush(uint32_t);
