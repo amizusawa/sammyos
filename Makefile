@@ -1,9 +1,9 @@
+include Makefile.vars
 
 BUILD_DIR = ./build
 MODULES = kernel drivers cpu libc
 BOOT_OBJ = ./build/boot/boot.o
 OBJS = $(foreach dir, $(MODULES), $(wildcard $(BUILD_DIR)/$(dir)/*.o))
-C_FLAGS = -ffreestanding -g -nostdlib
 ISO_DIR = isodir
 OS = sammyos
 ISO = $(OS).iso
@@ -29,7 +29,7 @@ kernel: drivers cpu libc
 	make -C kernel
 
 iso: bootsect kernel
-	i386-elf-gcc -T linker.ld -o $(OS_BIN) $(C_FLAGS) $(BOOT_OBJ) $(OBJS) -lgcc
+	i386-elf-gcc -T linker.ld -o $(OS_BIN) $(LINKER_FLAGS) $(BOOT_OBJ) $(OBJS) -lgcc
 	mkdir -p $(ISO_DIR)/boot/grub
 	cp $(OS_BIN) $(ISO_DIR)/boot/$(OS_BIN)
 	cp grub.cfg $(ISO_DIR)/boot/grub/grub.cfg

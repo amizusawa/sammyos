@@ -1,6 +1,6 @@
+include ../Makefile.vars
 
 BUILD_DIR = ../build/kernel
-CFLAGS = -g -O0 -ffreestanding -std=gnu99
 C_SRCS = $(wildcard *.c)
 C_OBJS = $(C_SRCS:.c=.o)
 BUILD_C_OBJS = $(foreach file, $(C_OBJS), $(BUILD_DIR)/$(file))

@@ -1,3 +1,6 @@
+#ifndef DESCRIPTOR_TABLES_H
+#define DESCRIPTOR_TABLES_H
+
 #include <stdint.h>
 
 struct gdt_entry_struct {
@@ -81,3 +84,5 @@ extern void irq14();
 extern void irq15();
 
 void init_descriptor_tables();
+
+#endif

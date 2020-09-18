@@ -5,6 +5,8 @@
 #include "../libc/string.h"
 
 static void keyboard_callback(registers_t regs) {
+    UNUSED(regs);
+
     uint8_t scancode = port_byte_in(0x60);
 
     kprint("Keypress: ");
