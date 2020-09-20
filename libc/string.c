@@ -24,3 +24,20 @@ void int_to_ascii(int n, char buffer[]) {
         j++;
     }
 }
+
+int strlen(char str[]) {
+    int i = 0;
+    while (str[i] != '\0') i++;
+    return i;
+}
+
+void append(char str[], char c) {
+    int len = strlen(str);
+    str[len] = c;
+    str[len + 1] = '\0';
+}
+
+void backspace(char str[]) {
+    int len = strlen(str);
+    str[len - 1] = '\0';
+}
