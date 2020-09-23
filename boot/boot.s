@@ -22,6 +22,11 @@ stack_top:
 _start:
 
     mov $stack_top, %esp
+    andl $-16, %esp
+
+    pushl %ebx
+    pushl %eax
+
     call kernel_main
 
 1:
