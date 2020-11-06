@@ -5,7 +5,6 @@
 #include "../cpu/descriptor_tables.h"
 #include "../drivers/timer.h"
 #include "../drivers/keyboard.h"
-#include "thread.h"
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -22,18 +21,22 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     }
 
     init_frame_alloc(mboot_hdr);
+
+    uint32_t new_frame = frame_alloc();
+    uint32_t new_frame_addr = mmap_read(new_frame, MMAP_GET_ADDR);
+    char* str = (char*) new_frame_addr;
+    for (int i = 0; i < PAGE_SIZE; i++) {
+        str[i] = 'a';
+    }
+
     init_descriptor_tables();
+    kprint("Descriptor tables initialized.\n");
+
     asm volatile("sti");
     init_timer(50);
+    kprint("Timer initialized.\n");
+
     init_keyboard();
-    init_thread();
+    kprint("Keyboard initialized.\n");
 
-}
-
-void test_thread(char* str) {
-    for (int i = 0; i < 5; i++) {
-        char chr[2] = {str[i], '\0'};
-        kprint(chr);
-        kprint("\n");
-    }
 }
