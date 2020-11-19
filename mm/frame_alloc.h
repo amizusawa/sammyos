@@ -2,7 +2,7 @@
 #define FRAME_ALLOC_H
 
 #include <stdint.h>
-#include "multiboot.h"
+#include "../kernel/multiboot.h"
 
 #define MMAP_GET_NUM 0
 #define MMAP_GET_ADDR 1

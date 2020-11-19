@@ -1,10 +1,14 @@
-#include "kernel.h"
+#include <stdint.h>
 #include "multiboot.h"
-#include "frame_alloc.h"
+#include "../mm/frame_alloc.h"
 #include "../drivers/screen.h"
 #include "../cpu/descriptor_tables.h"
 #include "../drivers/timer.h"
 #include "../drivers/keyboard.h"
+
+uint32_t page_dir;
+
+static void init_paging();
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -22,13 +26,6 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_frame_alloc(mboot_hdr);
 
-    uint32_t new_frame = frame_alloc();
-    uint32_t new_frame_addr = mmap_read(new_frame, MMAP_GET_ADDR);
-    char* str = (char*) new_frame_addr;
-    for (int i = 0; i < PAGE_SIZE; i++) {
-        str[i] = 'a';
-    }
-
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 
@@ -39,4 +36,11 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     init_keyboard();
     kprint("Keyboard initialized.\n");
 
+    init_paging();
+    kprint("Test.\n");
+}
+
+static void init_paging() {
+    page_dir = mmap_read(frame_alloc(), MMAP_GET_ADDR);
+    
 }
