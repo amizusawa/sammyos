@@ -1,3 +1,4 @@
+
 include Makefile.vars
 
 BUILD_DIR = ./build
@@ -38,5 +39,4 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -rf $(ISO_DIR)
 	rm -f $(OS).*
-
 

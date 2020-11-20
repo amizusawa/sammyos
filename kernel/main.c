@@ -6,7 +6,7 @@
 #include "../drivers/timer.h"
 #include "../drivers/keyboard.h"
 
-uint32_t page_dir;
+uint32_t page_dir[1024] __attribute__((aligned(4096)));
 
 static void init_paging();
 
@@ -41,6 +41,10 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 }
 
 static void init_paging() {
-    page_dir = mmap_read(frame_alloc(), MMAP_GET_ADDR);
-    
+
+    for (int i = 0; i < 1024; i++) {
+        page_dir[i] = 0x00000002;
+    } 
+
+
 }

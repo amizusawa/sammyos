@@ -2,7 +2,7 @@
 #include "ports.h"
 #include "../cpu/isr.h"
 #include "screen.h"
-#include "../libc/string.h"
+#include <string.h>
 
 #define SC_MAX 57
 #define L_SHIFT 0x2a

@@ -2,7 +2,7 @@
 #define KEYBOARD_H
 
 #include <stdint.h>
-#include "../libc/function.h"
+#include <function.h>
 
 enum key {pressed, released};
 
