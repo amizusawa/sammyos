@@ -9,6 +9,8 @@
 uint32_t page_dir[1024] __attribute__((aligned(4096)));
 
 static void init_paging();
+extern void load_page_dir(uint32_t *);
+extern void enable_paging();
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -37,7 +39,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     kprint("Keyboard initialized.\n");
 
     init_paging();
-    kprint("Test.\n");
+    kprint("Paging enabled.\n");
 }
 
 static void init_paging() {
@@ -46,5 +48,12 @@ static void init_paging() {
         page_dir[i] = 0x00000002;
     } 
 
+    uint32_t first_page_table[1024] __attribute__((aligned(4096)));
+    for (int i = 0; i < 1024; i++) {
+        first_page_table[i] = (i * 0x1000) | 3;
+    }
+    page_dir[0] = ((unsigned int) first_page_table) | 3;
 
+    load_page_dir(page_dir);
+    enable_paging();
 }
