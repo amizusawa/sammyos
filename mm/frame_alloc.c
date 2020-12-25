@@ -1,29 +1,52 @@
 #include "frame_alloc.h"
+#include <mem.h>
+#include <function.h>
 
 multiboot_info_t* verified_mboot_hdr;
 uint32_t mboot_reserved_start;
 uint32_t mboot_reserved_end;
 uint32_t next_free_frame;
+extern uint8_t _end_kernel;
+struct page_frame pages[MAX_NUM_PAGES];
 
-void init_frame_alloc(multiboot_info_t* mboot_hdr) { 
-    verified_mboot_hdr = mboot_hdr;
-    mboot_reserved_start = (uint32_t) mboot_hdr;
-    mboot_reserved_end = (uint32_t) (mboot_hdr + sizeof(multiboot_info_t));
-    next_free_frame = 1;
-}
+int round_nearest_power_2(uint32_t num, uint32_t multiple);
 
-uint32_t frame_alloc() {
-    
-    uint32_t cur_addr = mmap_read(next_free_frame, MMAP_GET_ADDR);
+void init_frame_alloc(multiboot_info_t* mboot_hdr) {
+    UNUSED(mboot_hdr);
 
-    if (cur_addr >= mboot_reserved_start && cur_addr <= mboot_reserved_end) {
-        next_free_frame++;
-        return frame_alloc();
+    uint8_t* page_addr = &_end_kernel;
+    page_addr = (uint8_t*) round_nearest_power_2(
+                                (uint32_t) page_addr, 
+                                PAGE_SIZE);
+
+    for (int i = 0; i < MAX_NUM_PAGES; i++) {
+        struct page_frame page;
+        page.page_num = i;
+        page.page_addr = (void*) page_addr;
+        page.status = PAGE_FREE;
+
+        page_addr += PAGE_SIZE;
+
+        pages[i] = page;
     }
 
-    uint32_t cur_num = mmap_read(cur_addr, MMAP_GET_NUM);
-    next_free_frame = cur_num + 1;
-    return cur_num;
+}
+
+int round_nearest_power_2(uint32_t num, uint32_t multiple) {
+    return (num + multiple - 1) & (-multiple);
+}
+
+struct page_frame* frame_alloc() {
+    
+    for (int i = 0; i < MAX_NUM_PAGES; i++) {
+        struct page_frame* page = &pages[i];
+        if (page->status == PAGE_FREE) {
+            page->status = PAGE_USED;
+            return page;
+        }
+    }
+
+    return NULL;
 }
 
 uint32_t mmap_read(uint32_t request, uint8_t mode) {
@@ -61,5 +84,14 @@ uint32_t mmap_read(uint32_t request, uint8_t mode) {
         cur_mmap_addr += current_entry->size + sizeof(uintptr_t);
     }
 
+    return 0;
+}
+
+uint32_t frame_free(struct page_frame* page) {
+    if (page->status == PAGE_FREE) return -1;
+
+    memset(page->page_addr, 0, PAGE_SIZE);
+
+    page->status = PAGE_FREE;
     return 0;
 }

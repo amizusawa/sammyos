@@ -28,6 +28,9 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_frame_alloc(mboot_hdr);
 
+    init_paging();
+    kprint("Paging enabled.\n");
+
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 
@@ -37,9 +40,14 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_keyboard();
     kprint("Keyboard initialized.\n");
+    
+    struct page_frame* p = frame_alloc();
+    char* str = p->page_addr;
+    for (int i = 0; i < PAGE_SIZE; i++) {
+        str[i] = 'a';
+    }
 
-    init_paging();
-    kprint("Paging enabled.\n");
+    frame_free(p);
 }
 
 static void init_paging() {
