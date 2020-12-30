@@ -17,5 +17,5 @@ $(BUILD_DIR)/%.o: %.c
 
 $(BUILD_DIR)/%.o: %.s
 	@ mkdir -p $(BUILD_DIR) 
-	nasm $< -f elf -o $@
+	i386-elf-as $< -o $@
 

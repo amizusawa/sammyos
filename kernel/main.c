@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "multiboot.h"
+#include "thread.h"
 #include "../mm/frame_alloc.h"
 #include "../drivers/screen.h"
 #include "../cpu/descriptor_tables.h"
@@ -11,6 +12,8 @@ uint32_t page_dir[1024] __attribute__((aligned(4096)));
 static void init_paging();
 extern void load_page_dir(uint32_t *);
 extern void enable_paging();
+
+void test_func();
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -40,14 +43,11 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_keyboard();
     kprint("Keyboard initialized.\n");
-    
-    struct page_frame* p = frame_alloc();
-    char* str = p->page_addr;
-    for (int i = 0; i < PAGE_SIZE; i++) {
-        str[i] = 'a';
-    }
 
-    frame_free(p);
+    init_thread();
+
+    thread_create(test_func);
+    schedule();
 }
 
 static void init_paging() {
@@ -64,4 +64,8 @@ static void init_paging() {
 
     load_page_dir(page_dir);
     enable_paging();
+}
+
+void test_func() {
+    kprint("context switch test \n");
 }

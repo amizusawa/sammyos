@@ -1,21 +1,25 @@
 
-[GLOBAL load_page_dir]
+.globl load_page_dir
+.func load_page_dir
 load_page_dir:
-    push ebp
-    mov ebp, esp
-    mov eax, [8+esp]
-    mov cr3, eax
-    mov esp, ebp
-    pop ebp
+    pushl %ebp
+    movl %esp, %ebp
+    movl 8(%esp), %eax
+    movl %eax, %cr3
+    movl %ebp, %esp
+    popl %ebp
     ret
+.endfunc
 
-[GLOBAL enable_paging]
+.globl enable_paging
+.func enable_paging
 enable_paging:
-    push ebp
-    mov ebp, esp
-    mov eax, cr0
-    or eax, 0x80000000
-    mov cr0, eax
-    mov esp, ebp
-    pop ebp
+    pushl %ebp
+    movl %esp, %ebp
+    movl %cr0, %eax
+    orl $0x80000000, %eax
+    movl %eax, %cr0
+    movl %ebp, %esp
+    popl %ebp
     ret
+.endfunc
