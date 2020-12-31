@@ -16,6 +16,7 @@ struct thread {
     uint32_t stack_top;
     int state;
     uint32_t tid;
+    uint32_t quantum;
 };
 
 typedef void thread_func(void *aux);

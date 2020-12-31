@@ -6,7 +6,7 @@
 
 uint32_t tick = 0;
 
-static void timer_callback(registers_t regs) {
+static void timer_callback(registers_t* regs) {
     UNUSED(regs);
 
     tick++;
@@ -14,7 +14,7 @@ static void timer_callback(registers_t regs) {
 }
 
 void init_timer(uint32_t freq) {
-    register_interrupt_handler(IRQ0, &timer_callback);
+    register_interrupt_handler(IRQ0, timer_callback);
 
     uint32_t divisor = 1131980 / freq;
     port_byte_out(0x43, 0x36);
