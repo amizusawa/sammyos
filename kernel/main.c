@@ -1,11 +1,11 @@
 #include <stdint.h>
 #include "multiboot.h"
 #include "thread.h"
-#include "../mm/frame_alloc.h"
-#include "../drivers/screen.h"
-#include "../cpu/descriptor_tables.h"
-#include "../drivers/timer.h"
-#include "../drivers/keyboard.h"
+#include <mm/frame_alloc.h>
+#include <drivers/screen.h>
+#include <cpu/descriptor_tables.h>
+#include <drivers/timer.h>
+#include <drivers/keyboard.h>
 
 uint32_t page_dir[1024] __attribute__((aligned(4096)));
 

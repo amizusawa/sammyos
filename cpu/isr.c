@@ -1,6 +1,6 @@
 #include "isr.h"
-#include "../drivers/screen.h"
-#include "../libc/string.h"
+#include <drivers/screen.h>
+#include <string.h>
 
 isr_t interrupt_handlers[256];
 

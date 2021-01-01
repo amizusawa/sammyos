@@ -1,8 +1,8 @@
 #include "thread.h"
-#include "../cpu/interrupt.h"
-#include "../mm/frame_alloc.h"
 #include "switch.h"
-#include "../drivers/screen.h"
+#include <cpu/interrupt.h>
+#include <mm/frame_alloc.h>
+#include <drivers/screen.h>
 #include <function.h>
 
 struct thread* current_thread;
@@ -72,6 +72,12 @@ void thread_exit() {
     schedule();
 }
 
+struct thread* thread_current() {
+    struct thread* t = running_thread();
+    // TODO: check for stack overflow 
+    return t;
+}
+
 static void kernel_thread(thread_func* func, void* aux) {
     intr_enable();
     func(aux);
@@ -95,7 +101,7 @@ void schedule() {
 
 void thread_schedule_tail(struct thread* prev) {
     UNUSED(prev);
-    // TODO: free and destroy prev, mark current thread as running
+    // TODO: free and destroy prev if it's dying, mark current thread as running
 }
 
 static void* alloc_stack_frame(struct thread* t, uint32_t size) {

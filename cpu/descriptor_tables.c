@@ -1,6 +1,6 @@
 #include "descriptor_tables.h"
-#include "../libc/mem.h"
-#include "../drivers/ports.h"
+#include <mem.h>
+#include <drivers/ports.h>
 
 extern void gdt_flush(uint32_t);
 static void gdt_set_gate(int32_t, uint32_t, uint32_t, uint8_t, uint8_t);

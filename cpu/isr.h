@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "../drivers/ports.h"
+#include <drivers/ports.h>
 
 #define IRQ0 32
 #define IRQ1 33

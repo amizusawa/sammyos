@@ -24,5 +24,6 @@ typedef void thread_func(void *aux);
 void init_thread();
 uint32_t thread_create(thread_func* function);
 void schedule();
+struct thread* thread_current();
 
 #endif
