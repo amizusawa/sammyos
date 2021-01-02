@@ -88,6 +88,10 @@ struct thread* thread_current() {
     return t;
 }
 
+void thread_yield() {
+    
+}
+
 static void kernel_thread(thread_func* func, void* aux) {
     intr_enable();
     func(aux);

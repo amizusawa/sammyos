@@ -2,7 +2,7 @@
 #include "screen.h"
 #include "ports.h"
 #include <string.h>
-#include <cpu/isr.h>
+#include <cpu/interrupt.h>
 #include <kernel/thread.h>
 
 uint32_t tick = 0;

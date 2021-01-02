@@ -4,6 +4,7 @@
 #include <mm/frame_alloc.h>
 #include <drivers/screen.h>
 #include <cpu/descriptor_tables.h>
+#include <cpu/interrupt.h>
 #include <drivers/timer.h>
 #include <drivers/keyboard.h>
 
@@ -37,7 +38,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 
-    asm volatile("sti");
+    intr_enable();
     init_timer(50);
     kprint("Timer initialized.\n");
 
