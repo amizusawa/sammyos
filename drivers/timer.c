@@ -1,8 +1,9 @@
 #include "timer.h"
 #include "screen.h"
-#include <cpu/isr.h>
 #include "ports.h"
 #include <string.h>
+#include <cpu/isr.h>
+#include <kernel/thread.h>
 
 uint32_t tick = 0;
 
@@ -10,7 +11,7 @@ static void timer_callback(registers_t* regs) {
     UNUSED(regs);
 
     tick++;
-    //kprint("tick");
+    thread_tick();
 }
 
 void init_timer(uint32_t freq) {

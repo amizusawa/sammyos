@@ -50,6 +50,7 @@ uint32_t thread_create(thread_func* function) {
 
     t->stack_top = (uint32_t) pf->page_addr + PAGE_SIZE;
     t->tid = allocate_tid();
+    t->quantum = TIME_SLICE;
 
     kf = alloc_stack_frame(t, sizeof(*kf));
     kf->eip = NULL;
@@ -70,6 +71,15 @@ uint32_t thread_create(thread_func* function) {
 void thread_exit() {
     // TODO: mark current thread as dying
     schedule();
+}
+
+void thread_tick() {
+    struct thread* current = thread_current();
+    current->quantum--;
+    
+    if (current->quantum <= 0) {
+        intr_yield_on_return();
+    }
 }
 
 struct thread* thread_current() {

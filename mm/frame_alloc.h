@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "../kernel/multiboot.h"
+#include <kernel/multiboot.h>
 
 #define MMAP_GET_NUM 0
 #define MMAP_GET_ADDR 1
