@@ -1,6 +1,7 @@
 
 #include "screen.h"
 #include "ports.h"
+#include <cpu/interrupt.h>
 
 int get_cursor_offset();
 void set_cursor_offset(int offset);
@@ -71,6 +72,7 @@ int print_char(char c, int row, int col, char attr) {
 }
 
 void screen_scroll() {
+    intr_disable();
     unsigned char* video_memory = (unsigned char*) VIDEO_MEMORY;
 
     int col = 0;
@@ -94,6 +96,7 @@ void screen_scroll() {
         video_memory[offset+1] = WHITE_ON_BLACK;
         col++;
     }
+    intr_enable();
 }
 
 void screen_clear() {

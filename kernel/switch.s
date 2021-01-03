@@ -5,9 +5,9 @@
 .func switch_threads
 switch_threads:
     pushl %ebx
+    pushl %ebp
     pushl %esi
     pushl %edi
-    pushl %ebp
 
 .globl thread_stack_ofs
     # current->stack = esp

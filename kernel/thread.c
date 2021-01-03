@@ -7,6 +7,7 @@
 
 struct thread* current_thread;
 struct thread* init_task;
+struct thread* idle_thread;
 
 uint32_t number_tasks = 0;
 struct thread* thread_list[MAX_THREADS];
@@ -14,8 +15,12 @@ extern uint32_t stack_top;
 
 uint32_t allocate_tid();
 static void* alloc_stack_frame(struct thread* t, uint32_t size);
+void thread_schedule_tail(struct thread* prev);
 struct thread* running_thread();
 static void kernel_thread(thread_func* func, void* aux);
+static void idle();
+void schedule();
+uint32_t last_thread_id = 0;
 
 struct kernel_thread_frame {
     void* eip;
@@ -24,11 +29,18 @@ struct kernel_thread_frame {
 };
 
 void init_thread() {
-    init_task->stack_top = stack_top;
+    init_task->stack_top = (uint8_t*) stack_top;
     init_task->state = THREAD_RUNNING;
     init_task->tid = allocate_tid();
 
     thread_list[init_task->tid] = init_task;
+}
+
+void thread_start() {
+    thread_create(idle);
+
+    intr_enable();
+    schedule();
 }
 
 uint32_t allocate_tid() {
@@ -48,9 +60,10 @@ uint32_t thread_create(thread_func* function) {
     struct switch_entry_frame* ef;
     struct switch_threads_frame* sf;
 
-    t->stack_top = (uint32_t) pf->page_addr + PAGE_SIZE;
+    t->stack_top = (uint8_t*) pf->page_addr + PAGE_SIZE;
     t->tid = allocate_tid();
     t->quantum = TIME_SLICE;
+    t->state = THREAD_READY;
 
     kf = alloc_stack_frame(t, sizeof(*kf));
     kf->eip = NULL;
@@ -65,21 +78,37 @@ uint32_t thread_create(thread_func* function) {
     sf->ebp = 0;
 
     thread_list[t->tid] = t;
+
+    if (function == idle) {
+        idle_thread = t;
+    }
     return t->tid;
 }
 
 void thread_exit() {
     // TODO: mark current thread as dying
+    thread_current()->state = THREAD_DYING;
     schedule();
 }
 
 void thread_tick() {
     struct thread* current = thread_current();
+
+    if (current == init_task) {
+        return;
+    }
+
     current->quantum--;
     
     if (current->quantum <= 0) {
         intr_yield_on_return();
     }
+}
+
+void thread_block() {
+    thread_current()->state = THREAD_BLOCKED;
+
+    //schedule();
 }
 
 struct thread* thread_current() {
@@ -89,7 +118,22 @@ struct thread* thread_current() {
 }
 
 void thread_yield() {
-    
+    struct thread* cur = thread_current();
+    cur->state = THREAD_READY;
+
+    schedule();
+}
+
+static void idle() {
+    kprint("idle");
+    idle_thread = thread_current();
+
+    for (;;) {
+        //intr_disable();
+        //thread_block();
+
+        asm volatile ("sti; hlt" : : : "memory");
+    }
 }
 
 static void kernel_thread(thread_func* func, void* aux) {
@@ -98,23 +142,36 @@ static void kernel_thread(thread_func* func, void* aux) {
     thread_exit();
 }
 
-int temp_var = 1;
 void schedule() {
-    // TODO: implement actual scheduling
-    if (temp_var == 1) {
-        struct thread* next = thread_list[temp_var--];
-        struct thread* current = running_thread();  
+    intr_disable();
+    struct thread* next = NULL;
+    struct thread* current = thread_current();
+    struct thread* prev = NULL;
 
-        switch_threads(current, next);
+    for (uint32_t i = 1; i < MAX_THREADS; i++) {
+        struct thread* t = thread_list[i];
+        if (t && t->state == THREAD_READY && i != last_thread_id) {
+            next = t;
+            last_thread_id = i;
+            current->state = THREAD_READY;
+
+            break;
+        }
     }
-    else {
-        kprint("idle");
-        for (;;);
+
+    if (!next) {
+        next = idle_thread;
     }
+    prev = switch_threads(current, next);
+    thread_schedule_tail(prev);
 }
 
 void thread_schedule_tail(struct thread* prev) {
     UNUSED(prev);
+
+    struct thread* current = thread_current();
+    current->state = THREAD_RUNNING;
+    current->quantum = TIME_SLICE;
     // TODO: free and destroy prev if it's dying, mark current thread as running
 }
 

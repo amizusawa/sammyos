@@ -14,7 +14,8 @@ static void init_paging();
 extern void load_page_dir(uint32_t *);
 extern void enable_paging();
 
-void test_func();
+void test_func1();
+void test_func2();
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -29,6 +30,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
         kprint("ERROR: No multiboot memory map was provided\n");
         return;
     }
+    intr_disable();
 
     init_frame_alloc(mboot_hdr);
 
@@ -38,8 +40,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 
-    intr_enable();
-    init_timer(50);
+    init_timer(2);
     kprint("Timer initialized.\n");
 
     init_keyboard();
@@ -47,8 +48,10 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_thread();
 
-    thread_create(test_func);
-    schedule();
+    thread_create(test_func1);
+    thread_create(test_func2);
+    thread_start();
+
 }
 
 static void init_paging() {
@@ -67,6 +70,18 @@ static void init_paging() {
     enable_paging();
 }
 
-void test_func() {
-    kprint("context switch test \n");
+void test_func1() {
+    for (int i = 0;;i++) {
+        if (i%100000 == 0) {
+            kprint("a");
+        }
+    }
+}
+
+void test_func2() {
+    for (int i = 0;;i++) {
+        if (i%100000 == 0) {
+            kprint("b");
+        }
+    }
 }
