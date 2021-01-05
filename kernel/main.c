@@ -40,7 +40,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 
-    init_timer(2);
+    init_timer(50);
     kprint("Timer initialized.\n");
 
     init_keyboard();
@@ -71,17 +71,13 @@ static void init_paging() {
 }
 
 void test_func1() {
-    for (int i = 0;;i++) {
-        if (i%100000 == 0) {
-            kprint("a");
-        }
+    for (int i = 0;i<10;i++) {
+        kprint("a");
     }
 }
 
 void test_func2() {
-    for (int i = 0;;i++) {
-        if (i%100000 == 0) {
-            kprint("b");
-        }
+    for (int i = 0;i<10;i++) {
+        kprint("b");
     }
 }

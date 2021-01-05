@@ -87,7 +87,9 @@ uint32_t thread_create(thread_func* function) {
 
 void thread_exit() {
     // TODO: mark current thread as dying
-    thread_current()->state = THREAD_DYING;
+    struct thread* current = thread_current();
+    current->state = THREAD_DYING;
+    thread_list[current->tid] = NULL;
     schedule();
 }
 
