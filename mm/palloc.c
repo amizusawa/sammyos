@@ -1,4 +1,4 @@
-#include "frame_alloc.h"
+#include "palloc.h"
 #include <mem.h>
 #include <function.h>
 
@@ -11,7 +11,7 @@ struct page_frame pages[MAX_NUM_PAGES];
 
 int round_nearest_power_2(uint32_t num, uint32_t multiple);
 
-void init_frame_alloc(multiboot_info_t* mboot_hdr) {
+void init_palloc(multiboot_info_t* mboot_hdr) {
     UNUSED(mboot_hdr);
 
     uint8_t* page_addr = &_end_kernel;
@@ -23,7 +23,7 @@ void init_frame_alloc(multiboot_info_t* mboot_hdr) {
         struct page_frame page;
         page.page_num = i;
         page.page_addr = (void*) page_addr;
-        page.status = PAGE_FREE;
+        //page.status = PAGE_FREE;
 
         page_addr += PAGE_SIZE;
 
@@ -37,7 +37,7 @@ int round_nearest_power_2(uint32_t num, uint32_t multiple) {
 }
 
 struct page_frame* frame_alloc() {
-    
+    /*
     for (int i = 0; i < MAX_NUM_PAGES; i++) {
         struct page_frame* page = &pages[i];
         if (page->status == PAGE_FREE) {
@@ -45,8 +45,13 @@ struct page_frame* frame_alloc() {
             return page;
         }
     }
+    */
 
     return NULL;
+}
+
+void* palloc_get_page(enum palloc_flags flags) {
+
 }
 
 uint32_t mmap_read(uint32_t request, uint8_t mode) {
@@ -88,10 +93,12 @@ uint32_t mmap_read(uint32_t request, uint8_t mode) {
 }
 
 uint32_t frame_free(struct page_frame* page) {
+    /*
     if (page->status == PAGE_FREE) return -1;
 
     memset(page->page_addr, 0, PAGE_SIZE);
 
     page->status = PAGE_FREE;
+    */
     return 0;
 }

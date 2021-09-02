@@ -25,7 +25,7 @@ iso: $(MODULES)
 	mkdir -p $(ISO_DIR)/boot/grub
 	cp $(OS_BIN) $(ISO_DIR)/boot/$(OS_BIN)
 	cp grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
-	grub-mkrescue -o $(ISO) $(ISO_DIR)
+	grub2-mkrescue -o $(ISO) $(ISO_DIR)
 
 run: 
 	qemu-system-i386 -s -cdrom $(ISO)

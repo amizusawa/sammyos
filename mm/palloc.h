@@ -1,5 +1,5 @@
-#ifndef FRAME_ALLOC_H
-#define FRAME_ALLOC_H
+#ifndef PALLOC_H
+#define PALLOC_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -17,9 +17,9 @@
 #define PAGE_SIZE  (1 << PGBITS)         
 #define PGMASK  BITMASK(PGSHIFT, PGBITS)   
 
-enum {
-    PAGE_FREE,
-    PAGE_USED
+enum palloc_flags {
+    PALLOC_NONE = 0,
+    PALLOC_ASSERT = 1, // Panic on failure
 };
 
 struct page_frame {
@@ -28,9 +28,9 @@ struct page_frame {
     uint32_t status;
 };
 
-void init_frame_alloc(multiboot_info_t* mboot_hdr);
-struct page_frame* frame_alloc();
-uint32_t frame_free(struct page_frame* page);
+void init_palloc(multiboot_info_t* mboot_hdr);
+void* palloc_get_page(enum palloc_flags);
+void palloc_free(struct page_frame* page);
 
 static inline void* page_round_down(const void* va) {
     return (void *) ((uintptr_t) va & ~PGMASK);

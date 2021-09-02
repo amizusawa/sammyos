@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "multiboot.h"
 #include "thread.h"
-#include <mm/frame_alloc.h>
+#include <mm/palloc.h>
 #include <drivers/screen.h>
 #include <cpu/descriptor_tables.h>
 #include <cpu/interrupt.h>
@@ -32,7 +32,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     }
     intr_disable();
 
-    init_frame_alloc(mboot_hdr);
+    init_palloc(mboot_hdr);
 
     init_paging();
     kprint("Paging enabled.\n");
