@@ -38,8 +38,8 @@ _start:
     movl $1023, %ecx
 
 1:
-    cmp $_start_kernel, %esi
-    jl 2f
+    #cmp $_start_kernel, %esi
+    #jl 2f
     cmpl $(_end_kernel - 0xC0000000), %esi
     jge 3f
 

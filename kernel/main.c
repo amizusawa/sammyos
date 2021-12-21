@@ -10,10 +10,6 @@
 
 uint32_t page_dir[1024] __attribute__((aligned(4096)));
 
-static void init_paging();
-extern void load_page_dir(uint32_t *);
-extern void enable_paging();
-
 void test_func1();
 void test_func2();
 
@@ -34,9 +30,6 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_palloc(mboot_hdr);
 
-    init_paging();
-    kprint("Paging enabled.\n");
-
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 
@@ -52,22 +45,6 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     thread_create(test_func2);
     thread_start();
 
-}
-
-static void init_paging() {
-
-    for (int i = 0; i < 1024; i++) {
-        page_dir[i] = 0x00000002;
-    } 
-
-    uint32_t first_page_table[1024] __attribute__((aligned(4096)));
-    for (int i = 0; i < 1024; i++) {
-        first_page_table[i] = (i * 0x1000) | 3;
-    }
-    page_dir[0] = ((unsigned int) first_page_table) | 3;
-
-    load_page_dir(page_dir);
-    enable_paging();
 }
 
 void test_func1() {
