@@ -76,14 +76,14 @@ _start:
 .section .text
 
 4:
-    /*
+    
     mov $stack_top, %esp
     andl $-16, %esp
 
     pushl %ebx
     pushl %eax
-    */
-    #call kernel_main
+    
+    call kernel_main
 
 5:
     jmp 5b

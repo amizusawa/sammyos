@@ -7,11 +7,9 @@
 #include <cpu/interrupt.h>
 #include <drivers/timer.h>
 #include <drivers/keyboard.h>
+#include <mm/paging.h>
 
 uint32_t page_dir[1024] __attribute__((aligned(4096)));
-
-void test_func1();
-void test_func2();
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -27,7 +25,8 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
         return;
     }
     intr_disable();
-
+    
+    init_page_fault_handler();
     init_palloc(mboot_hdr);
 
     init_descriptor_tables();
@@ -40,9 +39,11 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     kprint("Keyboard initialized.\n");
 
     init_thread();
-
+    
+    /*
     thread_create(test_func1);
     thread_create(test_func2);
+    */
     thread_start();
 
 }
