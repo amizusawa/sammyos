@@ -28,9 +28,9 @@ struct page_frame {
     uint32_t status;
 };
 
-void init_palloc(multiboot_info_t* mboot_hdr);
-void* palloc_get_page(enum palloc_flags);
-void palloc_free(struct page_frame* page);
+void init_pmm(multiboot_info_t* mboot_hdr);
+void* pmm_get_page(enum palloc_flags);
+void pmm_free(struct page_frame* page);
 
 static inline void* page_round_down(const void* va) {
     return (void *) ((uintptr_t) va & ~PGMASK);

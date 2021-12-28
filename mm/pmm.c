@@ -1,4 +1,4 @@
-#include "palloc.h"
+#include "pmm.h"
 #include <mem.h>
 #include <function.h>
 
@@ -11,7 +11,7 @@ struct page_frame pages[MAX_NUM_PAGES];
 
 int round_nearest_power_2(uint32_t num, uint32_t multiple);
 
-void init_palloc(multiboot_info_t* mboot_hdr) {
+void init_pmm(multiboot_info_t* mboot_hdr) {
     UNUSED(mboot_hdr);
 
     uint8_t* page_addr = &_end_kernel;
@@ -50,7 +50,7 @@ struct page_frame* frame_alloc() {
     return NULL;
 }
 
-void* palloc_get_page(enum palloc_flags flags) {
+void* pmm_get_page(enum palloc_flags flags) {
 
 }
 
@@ -92,7 +92,7 @@ uint32_t mmap_read(uint32_t request, uint8_t mode) {
     return 0;
 }
 
-uint32_t frame_free(struct page_frame* page) {
+void pmm_free(struct page_frame* page) {
     /*
     if (page->status == PAGE_FREE) return -1;
 

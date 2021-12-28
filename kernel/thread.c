@@ -1,7 +1,7 @@
 #include "thread.h"
 #include "switch.h"
 #include <cpu/interrupt.h>
-#include <mm/palloc.h>
+#include <mm/pmm.h>
 #include <drivers/screen.h>
 #include <function.h>
 
@@ -50,7 +50,7 @@ uint32_t allocate_tid() {
 
 uint32_t thread_create(thread_func* function) {
     
-    struct page_frame* pf = palloc_get_page(PALLOC_NONE);
+    struct page_frame* pf = pmm_get_page(PALLOC_NONE);
     if (!pf) {
         return -1;
     }

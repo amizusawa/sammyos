@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include "multiboot.h"
 #include "thread.h"
-#include <mm/palloc.h>
+#include <mm/pmm.h>
 #include <drivers/screen.h>
 #include <cpu/descriptor_tables.h>
 #include <cpu/interrupt.h>
@@ -27,7 +27,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     intr_disable();
     
     init_page_fault_handler();
-    init_palloc(mboot_hdr);
+    init_pmm(mboot_hdr);
 
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
@@ -44,7 +44,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     thread_create(test_func1);
     thread_create(test_func2);
     */
-    thread_start();
+    //thread_start();
 
 }
 

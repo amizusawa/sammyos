@@ -3,3 +3,4 @@ build/
 isodir/
 *.iso
 *.bin
+*.swp
