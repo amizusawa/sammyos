@@ -1,5 +1,5 @@
 #include "bitmap.h"
-#include <round.h>
+#include <math.h>
 #include <function.h>
 
 // Elem type

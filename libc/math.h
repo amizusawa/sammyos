@@ -1,7 +1,5 @@
-// Taken directly from Pintos' lib/round.h
-
-#ifndef __LIB_ROUND_H
-#define __LIB_ROUND_H
+#ifndef __LIB_MATH_H
+#define __LIB_MATH_H
 
 /* Yields X rounded up to the nearest multiple of STEP.
    For X >= 0, STEP >= 1 only. */
@@ -17,4 +15,12 @@
 
 /* There is no DIV_ROUND_DOWN.   It would be simply X / STEP. */
 
-#endif /* lib/round.h */
+static inline uint32_t max(uint32_t a, uint32_t b) {
+    return a > b ? a : b;
+}
+
+static inline uint32_t min(uint32_t a, uint32_t b) {
+    return a < b ? a : b;
+}
+
+#endif /* lib/math.h */

@@ -1,34 +1,45 @@
 #include "pmm.h"
 #include <mem.h>
 #include <function.h>
+#include <math.h>
+#include <bitmap.h>
+#include <kernel/lock.h>
 
-multiboot_info_t* verified_mboot_hdr;
+struct pool {
+    struct lock lock;
+    struct bitmap* used_map;
+    uint8_t* base;
+};
+
 uint32_t mboot_reserved_start;
 uint32_t mboot_reserved_end;
 uint32_t next_free_frame;
-extern uint8_t _end_kernel;
-struct page_frame pages[MAX_NUM_PAGES];
+extern uint32_t _end_kernel;
+static struct pool kernel_pool;
 
 int round_nearest_power_2(uint32_t num, uint32_t multiple);
+void init_pool(struct pool* p, void* base, size_t page_cnt, const char* name);
 
 void init_pmm(multiboot_info_t* mboot_hdr) {
-    UNUSED(mboot_hdr);
 
-    uint8_t* page_addr = &_end_kernel;
-    page_addr = (uint8_t*) round_nearest_power_2(
-                                (uint32_t) page_addr, 
-                                PAGE_SIZE);
-
-    for (int i = 0; i < MAX_NUM_PAGES; i++) {
-        struct page_frame page;
-        page.page_num = i;
-        page.page_addr = (void*) page_addr;
-        //page.status = PAGE_FREE;
-
-        page_addr += PAGE_SIZE;
-
-        pages[i] = page;
+    uint32_t* kernel_end = &_end_kernel;
+    uint32_t mod_count = mboot_hdr->mods_count;
+    multiboot_module_t* mod = (multiboot_module_t*) mboot_hdr->mods_addr;
+    for (uint32_t i = 0; i < mod_count; i++) {
+        kernel_end = max(mod->mod_end, (uint32_t) kernel_end);
+        mod = (multiboot_module_t*) (uintptr_t) mod + sizeof(multiboot_module_t);
     }
+
+    init_pool(&kernel_pool, kernel_end, MAX_NUM_PAGES, "kernel page");
+    // TODO: Probably need user pool
+}
+
+void init_pool(struct pool* p, void* base, size_t page_cnt, const char* name) {
+    UNUSED(name);
+
+    // TODO: Calculate space needed for bitmap and subtract from pool
+    // TODO: Init pool lock
+    p->used_map = bitmap_create_in_buf(page_cnt, base);
 
 }
 
@@ -54,6 +65,7 @@ void* pmm_get_page(enum palloc_flags flags) {
 
 }
 
+/*
 uint32_t mmap_read(uint32_t request, uint8_t mode) {
     
     if (request == 0) return 0;
@@ -91,6 +103,7 @@ uint32_t mmap_read(uint32_t request, uint8_t mode) {
 
     return 0;
 }
+*/
 
 void pmm_free(struct page_frame* page) {
     /*
