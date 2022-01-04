@@ -4,6 +4,7 @@
 #include <math.h>
 #include <bitmap.h>
 #include <kernel/lock.h>
+#include <kernel/panic.h>
 
 struct pool {
     struct lock lock;
@@ -39,7 +40,15 @@ void init_pool(struct pool* p, void* base, size_t page_cnt, const char* name) {
 
     // TODO: Calculate space needed for bitmap and subtract from pool
     // TODO: Init pool lock
+    size_t bitmap_pages = DIV_ROUND_UP(bitmap_buf_size(page_cnt), PAGE_SIZE);
+    if (bitmap_pages > page_cnt) {
+        PANIC("Not enough memory for bitmap");
+    }
+    page_cnt -= bitmap_pages;
+
+    lock_init(&p->lock);
     p->used_map = bitmap_create_in_buf(page_cnt, base);
+    p->base = base + bitmap_pages * PAGE_SIZE;
 
 }
 

@@ -21,6 +21,16 @@ static inline size_t elem_idx(size_t bit_idx) {
     return bit_idx / ELEM_BITS;
 }
 
+// Returns number of elements needed for bit_cnt bits
+static inline size_t elem_cnt(size_t bit_cnt) {
+    return DIV_ROUND_UP(bit_cnt, ELEM_BITS);
+}
+
+// Returns number of bytes needed for bit_cnt bits
+static inline size_t byte_cnt(size_t bit_cnt) {
+    return sizeof(elem_type) * elem_cnt(bit_cnt);
+}
+
 // Return an elem_type where only the bit_idx is 
 // turned on
 static inline elem_type bit_mask(size_t bit_idx) {
@@ -30,6 +40,10 @@ static inline elem_type bit_mask(size_t bit_idx) {
 // Return the number of bits in b 
 size_t bitmap_size(const struct bitmap* b) {
     return b->bit_count;
+}
+
+size_t bitmap_buf_size(size_t bit_cnt) {
+    return sizeof(struct bitmap) + byte_cnt(bit_cnt);
 }
 
 struct bitmap* bitmap_create_in_buf(size_t cnt, void* block) {
