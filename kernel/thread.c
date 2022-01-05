@@ -50,17 +50,17 @@ uint32_t allocate_tid() {
 
 uint32_t thread_create(thread_func* function) {
     
-    struct page_frame* pf = pmm_get_page(PALLOC_NONE);
+    void* pf = pmm_get_page(PMM_ZERO);
     if (!pf) {
         return -1;
     }
 
-    struct thread* t = pf->page_addr;
+    struct thread* t = pf;
     struct kernel_thread_frame* kf;
     struct switch_entry_frame* ef;
     struct switch_threads_frame* sf;
 
-    t->stack_top = (uint8_t*) pf->page_addr + PAGE_SIZE;
+    t->stack_top = (uint8_t*) pf + PAGE_SIZE;
     t->tid = allocate_tid();
     t->quantum = TIME_SLICE;
     t->state = THREAD_READY;
@@ -186,7 +186,7 @@ struct thread* running_thread() {
     uint32_t* esp;
 
     asm("mov %%esp, %0" : "=g" (esp));
-    return page_round_down(esp);
+    return pg_round_down(esp);
 }
 
 

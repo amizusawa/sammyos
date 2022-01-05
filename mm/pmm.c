@@ -56,71 +56,50 @@ int round_nearest_power_2(uint32_t num, uint32_t multiple) {
     return (num + multiple - 1) & (-multiple);
 }
 
-struct page_frame* frame_alloc() {
-    /*
-    for (int i = 0; i < MAX_NUM_PAGES; i++) {
-        struct page_frame* page = &pages[i];
-        if (page->status == PAGE_FREE) {
-            page->status = PAGE_USED;
-            return page;
-        }
-    }
-    */
+void* pmm_get_multiple(enum palloc_flags flags, size_t page_cnt) {
 
-    return NULL;
+    if (page_cnt == 0) return NULL;
+
+    // TODO: when user pool is added check the flags for user pool
+    struct pool* pool = &kernel_pool;
+    void* pages;
+    size_t page_idx;
+
+    lock_acquire(&pool->lock);
+    page_idx = bitmap_scan_and_flip(pool->used_map, 0, page_cnt, false);
+    lock_release(&pool->lock);
+
+    if (page_idx != BITMAP_ERROR) {
+        pages = pool->base + PAGE_SIZE * page_idx;
+    }
+    else {
+        pages = NULL;
+    }
+
+    if (pages != NULL) {
+        // TODO: add flags like PMM_ZERO to zero out the pages and apply them here
+    }
+    else {
+        // TODO: if PMM_ASSERT is set then panic
+    }
+
+    return pages;
 }
 
 void* pmm_get_page(enum palloc_flags flags) {
-
+    return pmm_get_multiple(flags, 1);
 }
 
-/*
-uint32_t mmap_read(uint32_t request, uint8_t mode) {
+void pmm_free_multiple(void* pages, size_t page_cnt) {
+    struct pool* pool = &kernel_pool;
     
-    if (request == 0) return 0;
-    if (mode != MMAP_GET_NUM && mode != MMAP_GET_ADDR) return 0;
+    size_t page_idx = pg_no(pages) - pg_no(pool->base);
 
-    uintptr_t cur_mmap_addr = (uintptr_t) verified_mboot_hdr->mmap_addr;
-    uintptr_t mmap_end_addr = cur_mmap_addr + verified_mboot_hdr->mmap_length;
-    uint32_t cur_num = 0;
-
-    while (cur_mmap_addr < mmap_end_addr) {
-        multiboot_memory_map_t* current_entry = (multiboot_memory_map_t *) cur_mmap_addr;
-
-        uint64_t i;
-        uint64_t current_entry_end = current_entry->addr + current_entry->len;
-        for (i = current_entry->addr; i + PAGE_SIZE < current_entry_end; i += PAGE_SIZE) {
-            if (mode == MMAP_GET_NUM && request >= i && request <= i + PAGE_SIZE) {
-                return cur_num + 1;
-            }
-
-            if (current_entry->type == MULTIBOOT_MEMORY_RESERVED) {
-                if (mode == MMAP_GET_ADDR && cur_num == request) {
-                    request++;
-                }
-                cur_num++;
-                continue;
-            }
-            else if (mode == MMAP_GET_ADDR && cur_num == request) {
-                return i;
-            }
-            cur_num++;
-        }
-
-        cur_mmap_addr += current_entry->size + sizeof(uintptr_t);
-    }
-
-    return 0;
+    // Make sure the pages we're freeing were allocated
+    ASSERT(bitmap_all(pool->used_map, page_idx, page_cnt));
+    bitmap_set_multiple(pool->used_map, page_idx, page_cnt, false);
 }
-*/
 
-void pmm_free(struct page_frame* page) {
-    /*
-    if (page->status == PAGE_FREE) return -1;
-
-    memset(page->page_addr, 0, PAGE_SIZE);
-
-    page->status = PAGE_FREE;
-    */
-    return 0;
+void pmm_free(void* page) {
+    pmm_free_multiple(page, 1);
 }
