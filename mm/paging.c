@@ -9,7 +9,7 @@
 void page_fault_handler(registers_t* regs);
 
 void init_page_fault_handler() {
-    register_interrupt_handler(IRQ14, page_fault_handler);
+    register_interrupt_handler(14, &page_fault_handler);
 
 }
 

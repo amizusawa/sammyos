@@ -9,7 +9,20 @@
 #include <drivers/keyboard.h>
 #include <mm/paging.h>
 
-uint32_t page_dir[1024] __attribute__((aligned(4096)));
+//uint32_t page_dir[1024] __attribute__((aligned(4096)));
+
+
+void test_func1() {
+    for (int i = 0;i<10;i++) {
+        kprint("a");
+    }
+}
+
+void test_func2() {
+    for (int i = 0;i<10;i++) {
+        kprint("b");
+    }
+}
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
@@ -40,22 +53,10 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_thread();
     
-    /*
+    
     thread_create(test_func1);
     thread_create(test_func2);
-    */
-    //thread_start();
+    
+    thread_start();
 
-}
-
-void test_func1() {
-    for (int i = 0;i<10;i++) {
-        kprint("a");
-    }
-}
-
-void test_func2() {
-    for (int i = 0;i<10;i++) {
-        kprint("b");
-    }
 }

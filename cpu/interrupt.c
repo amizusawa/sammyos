@@ -3,6 +3,7 @@
 #include <kernel/thread.h>
 #include <string.h>
 #include <stdbool.h>
+#include <libc/function.h>
 
 isr_t interrupt_handlers[256];
 static bool yield_on_return = false;
@@ -20,11 +21,19 @@ void register_interrupt_handler(uint8_t n, isr_t handler) {
 }
 
 void isr_handler(registers_t* regs) {
-    kprint("received interrupt: ");
-    char buff[10];
-    int_to_ascii(regs->int_no, buff);
-    kprint(buff);
-    kprint("\n");
+    ASSERT(regs->int_no < 256);
+
+    if (interrupt_handlers[regs->int_no]) {
+        isr_t handler = interrupt_handlers[regs->int_no];
+        handler(regs);
+    }
+    else {
+        kprint("received unhandled interrupt: ");
+        char buff[10];
+        int_to_ascii(regs->int_no, buff);
+        kprint(buff);
+        kprint("\n");
+    }
 }
 
 void irq_handler(registers_t* regs) {
