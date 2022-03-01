@@ -23,9 +23,12 @@ stack_top:
 # Preallocate space for paging
 .section .bss, "aw", @nobits
 .align 4096
+.global boot_page_directory
 boot_page_directory:
     .skip 4096
 boot_page_table_1:
+    .skip 4096
+boot_page_table_2:
     .skip 4096
 
 .section .multiboot.text, "a"
@@ -35,12 +38,12 @@ _start:
     # Physical address of the first page table
     movl $(boot_page_table_1 - 0xC0000000), %edi
     movl $0, %esi
-    movl $1023, %ecx
+    movl $2048, %ecx
 
 1:
     #cmp $_start_kernel, %esi
     #jl 2f
-    cmpl $(_end_kernel - 0xC0000000), %esi
+    cmpl $(_end_kernel + 0x3FFFFF - 0xC0000000), %esi
     jge 3f
 
     # Map physical adress as "present" and "writable"
@@ -59,6 +62,7 @@ _start:
 
     movl $(boot_page_table_1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 0
     movl $(boot_page_table_1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 768 * 4
+    movl $(boot_page_table_1 - 0xC0000000 + 4096 + 0x003), boot_page_directory - 0xC0000000 + 769 * 4
 
     # Set cr3 to address of boot_page_directory
     movl $(boot_page_directory - 0xC0000000), %ecx
@@ -76,7 +80,6 @@ _start:
 .section .text
 
 4:
-    
     mov $stack_top, %esp
     andl $-16, %esp
 

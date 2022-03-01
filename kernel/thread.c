@@ -20,7 +20,7 @@ struct thread* running_thread();
 static void kernel_thread(thread_func* func, void* aux);
 static void idle();
 void schedule();
-uint32_t last_thread_id = 0;
+uint32_t idle_thread_id = 0;
 
 struct kernel_thread_frame {
     void* eip;
@@ -81,6 +81,7 @@ uint32_t thread_create(thread_func* function) {
 
     if (function == idle) {
         idle_thread = t;
+        idle_thread_id = t->tid;
     }
     return t->tid;
 }
@@ -150,6 +151,7 @@ void schedule() {
     struct thread* current = thread_current();
     struct thread* prev = NULL;
 
+    /*
     for (uint32_t i = 1; i < MAX_THREADS; i++) {
         struct thread* t = thread_list[i];
         if (t && t->state == THREAD_READY && i != last_thread_id) {
@@ -160,6 +162,24 @@ void schedule() {
             break;
         }
     }
+    */
+
+    uint32_t i = (current->tid + 1) % MAX_THREADS;
+    while (i != current->tid) {
+        if (i == idle_thread_id || i == 0) {
+            i = (i + 1) % MAX_THREADS;
+            continue;
+        }
+
+        struct thread* t = thread_list[i];
+        if (t && t->state == THREAD_READY) {
+            next = t;
+            // TODO: only change current's status to ready if it's still running
+            current->state = THREAD_READY;
+        }
+        i = (i + 1) % MAX_THREADS;
+    }
+
 
     if (!next) {
         next = idle_thread;

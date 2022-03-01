@@ -13,14 +13,18 @@
 
 
 void test_func1() {
-    for (int i = 0;i<10;i++) {
-        kprint("a");
+    uint32_t i = 0;
+    for (;;) {
+        if (i % 1 << 15 == 0) kprint("Func 1");
+        i++;
     }
 }
 
 void test_func2() {
-    for (int i = 0;i<10;i++) {
-        kprint("b");
+    uint32_t i = 0;
+    for (;;) {
+        if (i % 1 << 15 == 0) kprint("Func 2");
+        i++;
     }
 }
 

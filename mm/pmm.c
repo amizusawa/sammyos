@@ -31,7 +31,9 @@ void init_pmm(multiboot_info_t* mboot_hdr) {
         mod = (multiboot_module_t*) (uintptr_t) mod + sizeof(multiboot_module_t);
     }
 
-    init_pool(&kernel_pool, kernel_end, MAX_NUM_PAGES, "kernel page");
+    uint32_t* free_start = ptov(3 * 1024 * 1024);
+
+    init_pool(&kernel_pool, free_start, MAX_NUM_PAGES, "kernel page");
     // TODO: Probably need user pool
 }
 
