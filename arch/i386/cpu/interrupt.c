@@ -1,6 +1,6 @@
 #include "interrupt.h"
 #include <drivers/screen.h>
-#include <kernel/thread.h>
+#include <kernel/thread/thread.h>
 #include <string.h>
 #include <stdbool.h>
 #include <libc/function.h>

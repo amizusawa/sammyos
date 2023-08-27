@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <kernel/multiboot.h>
+#include <cpu/multiboot.h>
 #include "vaddr.h"
 
 enum palloc_flags {

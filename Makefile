@@ -1,9 +1,12 @@
 
 include Makefile.vars
 
-BUILD_DIR = ./build
-MODULES = boot kernel drivers cpu libc mm
-OBJS = $(foreach dir, $(MODULES), $(wildcard $(BUILD_DIR)/$(dir)/*.o))
+$(info Target architecture: ${SAMMYOSARCH})
+
+ARCH_DIR = arch/${SAMMYOSARCH}
+MODULES = ${ARCH_DIR}/boot ${ARCH_DIR}/cpu kernel drivers libc
+#OBJS = $(foreach dir, $(MODULES), $(wildcard $(BUILD_DIR)/$(dir)/*.o))
+OBJS = $(shell find $(BUILD_DIR) -type f -name "*.o")
 ISO_DIR = isodir
 OS = sammyos
 ISO = $(OS).iso
@@ -25,7 +28,7 @@ iso: $(MODULES)
 	mkdir -p $(ISO_DIR)/boot/grub
 	cp $(OS_BIN) $(ISO_DIR)/boot/$(OS_BIN)
 	cp grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
-	grub2-mkrescue -o $(ISO) $(ISO_DIR)
+	grub-mkrescue -o $(ISO) $(ISO_DIR)
 
 run: 
 	qemu-system-i386 -s -cdrom $(ISO)

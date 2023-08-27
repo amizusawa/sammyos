@@ -1,7 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 
-#include <kernel/panic.h>
+#include <kernel/misc/panic.h>
 
 #define UNUSED(x) (void) (x);
 #define NOT_REACHED() kpanic("Reached an unreachable statement");

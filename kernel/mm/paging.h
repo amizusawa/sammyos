@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <kernel/multiboot.h>
+#include <cpu/multiboot.h>
 
 #define PAGE_FRAME_MASK 0xFFFFF000
 #define PAGE_PRESENT 1

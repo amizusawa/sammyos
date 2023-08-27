@@ -1,7 +1,7 @@
 #ifndef LOCK_H
 #define LOCK_H
 
-#include <kernel/thread.h>
+#include <kernel/thread/thread.h>
 
 struct lock {
     int value;

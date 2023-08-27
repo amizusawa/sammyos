@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include "multiboot.h"
-#include "thread.h"
+#include <cpu/multiboot.h>
+#include <thread/thread.h>
 #include <mm/pmm.h>
 #include <drivers/screen.h>
 #include <cpu/descriptor_tables.h>

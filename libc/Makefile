@@ -1,13 +1,12 @@
-include ../Makefile.vars
+include ${SAMMYOSROOT}/Makefile.vars
 
-BUILD_DIR = ../build/libc
 C_SRCS = $(wildcard *.c)
 HEADERS = $(wildcard *.h)
 C_OBJS = $(C_SRCS:.c=.o)
-BUILD_C_OBJS = $(foreach file, $(C_OBJS), $(BUILD_DIR)/$(file))
+BUILD_C_OBJS = $(foreach file, $(C_OBJS), $(BUILD_DIR)/libc/$(file))
 
 all: $(BUILD_C_OBJS)
 
-$(BUILD_DIR)/%.o: %.c $(HEADERS)
-	@ mkdir -p $(BUILD_DIR) 
+$(BUILD_DIR)/libc/%.o: %.c $(HEADERS)
+	@ mkdir -p $(BUILD_DIR)/libc
 	i386-elf-gcc $(CFLAGS) -ffreestanding -c $< -o $@

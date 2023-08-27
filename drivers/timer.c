@@ -3,7 +3,7 @@
 #include "ports.h"
 #include <string.h>
 #include <cpu/interrupt.h>
-#include <kernel/thread.h>
+#include <kernel/thread/thread.h>
 
 uint32_t tick = 0;
 
