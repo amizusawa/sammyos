@@ -3,8 +3,8 @@
 #include <function.h>
 #include <math.h>
 #include <bitmap.h>
-#include <kernel/lock/lock.h>
-#include <kernel/misc/panic.h>
+#include <lock.h>
+#include <panic.h>
 
 struct pool {
     struct lock lock;

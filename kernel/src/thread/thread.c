@@ -1,8 +1,8 @@
 #include "thread.h"
 #include "switch.h"
-#include <cpu/interrupt.h>
-#include <mm/pmm.h>
-#include <drivers/screen.h>
+#include <arch/interrupt.h>
+#include <pmm.h>
+#include <screen.h>
 #include <function.h>
 
 struct thread* current_thread;

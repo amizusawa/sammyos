@@ -1,5 +1,5 @@
 #include "panic.h"
-#include <drivers/screen.h>
+#include <screen.h>
 
 // Print kernel panic and halt cpu
 void kpanic(char* reason) {

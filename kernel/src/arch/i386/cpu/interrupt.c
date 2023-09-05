@@ -1,9 +1,9 @@
-#include "interrupt.h"
-#include <drivers/screen.h>
-#include <kernel/thread/thread.h>
+#include <arch/interrupt.h>
+#include <screen.h>
+#include <thread.h>
 #include <string.h>
 #include <stdbool.h>
-#include <libc/function.h>
+#include <function.h>
 
 isr_t interrupt_handlers[256];
 static bool yield_on_return = false;

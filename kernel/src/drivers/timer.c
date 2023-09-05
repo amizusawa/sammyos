@@ -1,9 +1,9 @@
-#include "timer.h"
-#include "screen.h"
-#include "ports.h"
+#include <timer.h>
+#include <screen.h>
+#include <ports.h>
 #include <string.h>
-#include <cpu/interrupt.h>
-#include <kernel/thread/thread.h>
+#include <arch/interrupt.h>
+#include <thread.h>
 
 uint32_t tick = 0;
 

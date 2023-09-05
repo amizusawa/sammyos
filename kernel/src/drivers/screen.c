@@ -1,7 +1,7 @@
 
-#include "screen.h"
-#include "ports.h"
-#include <cpu/interrupt.h>
+#include <screen.h>
+#include <ports.h>
+#include <arch/interrupt.h>
 
 int get_cursor_offset();
 void set_cursor_offset(int offset);

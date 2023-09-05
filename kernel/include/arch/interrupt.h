@@ -2,7 +2,7 @@
 #define INTERRUPT_H
 
 #include <stdint.h>
-#include <drivers/ports.h>
+#include <ports.h>
 
 #define IRQ0 32
 #define IRQ1 33

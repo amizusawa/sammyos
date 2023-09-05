@@ -1,5 +1,5 @@
 
-#include <kernel/lock/lock.h>
+#include <lock.h>
 #include <stddef.h>
 
 void lock_init(struct lock* lock) {

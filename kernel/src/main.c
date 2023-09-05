@@ -1,13 +1,13 @@
 #include <stdint.h>
-#include <cpu/multiboot.h>
-#include <thread/thread.h>
-#include <mm/pmm.h>
-#include <drivers/screen.h>
-#include <cpu/descriptor_tables.h>
-#include <cpu/interrupt.h>
-#include <drivers/timer.h>
-#include <drivers/keyboard.h>
-#include <mm/paging.h>
+#include <arch/multiboot.h>
+#include <thread.h>
+#include <pmm.h>
+#include <screen.h>
+#include <arch/descriptor_tables.h>
+#include <arch/interrupt.h>
+#include <timer.h>
+#include <keyboard.h>
+#include <paging.h>
 
 //uint32_t page_dir[1024] __attribute__((aligned(4096)));
 

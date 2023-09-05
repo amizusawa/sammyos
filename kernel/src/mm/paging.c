@@ -1,8 +1,8 @@
-#include "paging.h"
-#include <cpu/interrupt.h>
+#include <paging.h>
+#include <arch/interrupt.h>
 #include <stdbool.h>
 #include <function.h>
-#include "vaddr.h"
+#include <vaddr.h>
 
 #define DIRECTORY_INDEX(x) ((x) >> 22)
 #define TABLE_INDEX(x) (((x) >> 12) & 0x3FF)

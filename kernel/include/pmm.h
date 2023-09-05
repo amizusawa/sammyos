@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <cpu/multiboot.h>
-#include "vaddr.h"
+#include <arch/multiboot.h>
+#include <vaddr.h>
 
 enum palloc_flags {
     PMM_ASSERT = 1, // Panic on failure
