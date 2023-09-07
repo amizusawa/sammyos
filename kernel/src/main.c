@@ -9,25 +9,6 @@
 #include <keyboard.h>
 #include <paging.h>
 
-//uint32_t page_dir[1024] __attribute__((aligned(4096)));
-
-
-void test_func1() {
-    uint32_t i = 0;
-    for (;;) {
-        if (i % 1 << 15 == 0) kprint("Func 1");
-        i++;
-    }
-}
-
-void test_func2() {
-    uint32_t i = 0;
-    for (;;) {
-        if (i % 1 << 15 == 0) kprint("Func 2");
-        i++;
-    }
-}
-
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     if (mboot_magic != MULTIBOOT_BOOTLOADER_MAGIC) {
@@ -56,11 +37,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     kprint("Keyboard initialized.\n");
 
     init_thread();
-    
-    
-    thread_create(test_func1);
-    thread_create(test_func2);
-    
+
     thread_start();
 
 }
