@@ -43,7 +43,9 @@ _start:
 1:
     # Identity map starting from address 0 to cover the multiboot
     # info structure.
-    cmpl $(_end_kernel - 0xC0000000), %esi
+    # Map up to end of kernel plus 3MB to cover for initial kernel
+    # memory pool.
+    cmpl $(_end_kernel - 0xC0000000 + 0x3FFFFF), %esi
     jge 3f
 
     # Map physical adress as "present" and "writable"
@@ -62,7 +64,7 @@ _start:
 
     movl $(boot_page_table_1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 0
     movl $(boot_page_table_1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 768 * 4
-    #movl $(boot_page_table_1 - 0xC0000000 + 4096 + 0x003), boot_page_directory - 0xC0000000 + 769 * 4
+    movl $(boot_page_table_1 - 0xC0000000 + 4096 + 0x003), boot_page_directory - 0xC0000000 + 769 * 4
 
     # Set cr3 to address of boot_page_directory
     movl $(boot_page_directory - 0xC0000000), %ecx

@@ -38,6 +38,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_thread();
 
+    // Interrupts enabled by thread_start
     thread_start();
 
 }
