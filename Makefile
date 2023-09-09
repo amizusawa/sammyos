@@ -45,7 +45,7 @@ run:
 debug:
 	qemu-system-i386 -s -S -cdrom $(ISO) &
 	sleep 0.5s
-	i386-elf-gdb
+	gdb
 
 clean: 
 	rm -rf $(BUILD_DIR)
