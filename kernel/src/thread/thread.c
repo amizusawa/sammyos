@@ -29,6 +29,7 @@ struct kernel_thread_frame {
 };
 
 void init_thread() {
+    init_task = running_thread();
     init_task->stack_top = (uint8_t*) stack_top;
     init_task->state = THREAD_RUNNING;
     init_task->tid = allocate_tid();
@@ -128,7 +129,7 @@ void thread_yield() {
 }
 
 static void idle() {
-    kprint("idle");
+    kprint("idle\n");
     idle_thread = thread_current();
 
     for (;;) {
