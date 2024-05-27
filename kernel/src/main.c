@@ -27,6 +27,9 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
     init_page_fault_handler();
     init_pmm(mboot_hdr);
 
+    vga_screen_clear();
+    kprint("Welcome to SammyOS!\n");
+
     init_descriptor_tables();
     kprint("Descriptor tables initialized.\n");
 

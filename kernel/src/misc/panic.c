@@ -3,7 +3,7 @@
 
 // Print kernel panic and halt cpu
 void kpanic(char* reason) {
-    screen_clear();
+    vga_screen_clear();
     kprint("KERNEL PANIC: ");
     kprint(reason);
 

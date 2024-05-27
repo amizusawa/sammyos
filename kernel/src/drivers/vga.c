@@ -99,7 +99,7 @@ void screen_scroll() {
     intr_enable();
 }
 
-void screen_clear() {
+void vga_screen_clear() {
     unsigned char* video_memory = (unsigned char*) VIDEO_MEMORY;
 
     int offset;
