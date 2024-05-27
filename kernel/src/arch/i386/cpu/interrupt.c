@@ -1,5 +1,5 @@
 #include <arch/interrupt.h>
-#include <screen.h>
+#include <vga.h>
 #include <thread.h>
 #include <string.h>
 #include <stdbool.h>

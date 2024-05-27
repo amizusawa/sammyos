@@ -1,5 +1,5 @@
 
-#include <screen.h>
+#include <vga.h>
 #include <ports.h>
 #include <arch/interrupt.h>
 

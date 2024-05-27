@@ -1,7 +1,7 @@
 #include <keyboard.h> 
 #include <ports.h>
 #include <arch/interrupt.h>
-#include <screen.h>
+#include <vga.h>
 #include <string.h>
 
 #define SC_MAX 57

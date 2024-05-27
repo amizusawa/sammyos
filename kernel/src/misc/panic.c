@@ -1,5 +1,5 @@
 #include "panic.h"
-#include <screen.h>
+#include <vga.h>
 
 // Print kernel panic and halt cpu
 void kpanic(char* reason) {

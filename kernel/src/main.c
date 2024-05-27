@@ -2,7 +2,7 @@
 #include <arch/multiboot.h>
 #include <thread.h>
 #include <pmm.h>
-#include <screen.h>
+#include <vga.h>
 #include <arch/descriptor_tables.h>
 #include <arch/interrupt.h>
 #include <timer.h>

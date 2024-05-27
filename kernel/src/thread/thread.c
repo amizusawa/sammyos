@@ -2,7 +2,7 @@
 #include "switch.h"
 #include <arch/interrupt.h>
 #include <pmm.h>
-#include <screen.h>
+#include <vga.h>
 #include <function.h>
 
 struct thread* current_thread;
