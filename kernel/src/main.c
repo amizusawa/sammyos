@@ -8,8 +8,11 @@
 #include <timer.h>
 #include <keyboard.h>
 #include <paging.h>
+#include <ata.h>
 
 void kernel_main(uint32_t mboot_magic, void* mboot_header) {
+
+    uint8_t err;
 
     if (mboot_magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         kprint("ERROR: Kernel loaded by non-compliant bootloader\n");
@@ -38,6 +41,12 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_keyboard();
     kprint("Keyboard initialized.\n");
+
+    init_ata();
+    err = ata_detect_devices();
+    if (!err) {
+        kprint("No ATA devices detected\n");
+    }
 
     init_thread();
 
