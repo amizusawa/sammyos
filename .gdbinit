@@ -1,5 +1,5 @@
 
-symbol-file sammyos.bin
+symbol-file _out/sammyos.bin
 set arch i386
 target remote localhost:1234
 b kernel_main
