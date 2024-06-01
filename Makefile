@@ -10,6 +10,8 @@ ISO_DIR = isodir
 OS = sammyos
 ISO = $(OS).iso
 OS_BIN = $(OS).bin
+DISK_NAME = hda.img
+DISK_SIZE = 512M
 
 ifneq (, $(shell command -v grub-mkrescue))
 $(info Using grub-mkrescue)
@@ -46,6 +48,10 @@ debug:
 	qemu-system-i386 -s -S -cdrom $(BUILD_DIR)/$(ISO) &
 	sleep 0.5s
 	gdb
+
+create_disk:
+	-rm $(BUILD_DIR)/$(DISK_NAME)
+	dd if=/dev/zero of=$(BUILD_DIR)/$(DISK_NAME) bs=$(DISK_SIZE) count=1
 
 clean: 
 	rm -rf $(BUILD_DIR)
