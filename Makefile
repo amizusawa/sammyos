@@ -33,22 +33,20 @@ endef
 $(foreach module, $(MODULES), $(eval $(call make-module,$(module))))
 
 iso: $(MODULES)
-	i386-elf-gcc -T linker.ld -o $(OS_BIN) $(LINKER_FLAGS) $(OBJS) -lgcc
-	mkdir -p $(ISO_DIR)/boot/grub
-	cp $(OS_BIN) $(ISO_DIR)/boot/$(OS_BIN)
-	cp grub.cfg $(ISO_DIR)/boot/grub/grub.cfg
-	${GRUB_MKRESCUE} -o $(ISO) $(ISO_DIR)
+	i386-elf-gcc -T linker.ld -o $(BUILD_DIR)/$(OS_BIN) $(LINKER_FLAGS) $(OBJS) -lgcc
+	mkdir -p $(BUILD_DIR)/$(ISO_DIR)/boot/grub
+	cp $(BUILD_DIR)/$(OS_BIN) $(BUILD_DIR)/$(ISO_DIR)/boot/$(OS_BIN)
+	cp grub.cfg $(BUILD_DIR)/$(ISO_DIR)/boot/grub/grub.cfg
+	${GRUB_MKRESCUE} -o $(BUILD_DIR)/$(ISO) $(BUILD_DIR)/$(ISO_DIR)
 
 run: 
-	qemu-system-i386 -s -cdrom $(ISO)
+	qemu-system-i386 -s -cdrom $(BUILD_DIR)/$(ISO)
 
 debug:
-	qemu-system-i386 -s -S -cdrom $(ISO) &
+	qemu-system-i386 -s -S -cdrom $(BUILD_DIR)/$(ISO) &
 	sleep 0.5s
 	gdb
 
 clean: 
 	rm -rf $(BUILD_DIR)
-	rm -rf $(ISO_DIR)
-	rm -f $(OS).*
 
