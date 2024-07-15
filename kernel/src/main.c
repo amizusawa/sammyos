@@ -44,7 +44,7 @@ void kernel_main(uint32_t mboot_magic, void* mboot_header) {
 
     init_ata();
     err = ata_detect_devices();
-    if (!err) {
+    if (err) {
         kprint("No ATA devices detected\n");
     }
 

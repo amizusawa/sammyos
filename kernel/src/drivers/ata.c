@@ -23,7 +23,9 @@
 
 // ATA commands
 typedef enum ata_command {
-    IDENTIFY_DEVICE = 0xEC,
+    IDENTIFY_DEVICE =    0xEC,
+    READ_SECTOR_RETRY =  0x20,
+    WRITE_SECTOR_RETRY = 0x30,
 } ata_command;
 
 struct ata_device {
@@ -68,10 +70,8 @@ void ata_issue_pio_command(struct controller* c, ata_command command) {
 }
 
 uint8_t ata_detect_devices() {
-    for (uint8_t i = 0; i < CONTROLLER_COUNT; i++) {
-        struct controller* c = &controllers[i];
-        ata_issue_pio_command(c, IDENTIFY_DEVICE);
-    }
+    struct controller* c = &controllers[0];
+    ata_issue_pio_command(c, IDENTIFY_DEVICE);
     return 0;
 }
 
