@@ -1,6 +1,6 @@
 include ${SAMMYOSROOT}/Makefile.vars
 
-COMPONENTS = thread mm lock misc drivers
+COMPONENTS = thread mm lock misc drivers lib
 $(foreach component, $(COMPONENTS), $(shell mkdir -p $(BUILD_DIR)/kernel/src/$(component)))
 C_SRCS += $(foreach component, $(COMPONENTS), $(wildcard src/$(component)/*.c))
 S_SRCS += $(foreach component, $(COMPONENTS), $(wildcard src/$(component)/*.s))

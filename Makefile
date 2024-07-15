@@ -4,7 +4,7 @@ include Makefile.vars
 $(info Target architecture: ${SAMMYOSARCH})
 
 ARCH_DIR = arch/${SAMMYOSARCH}
-MODULES = kernel libc
+MODULES = kernel
 OBJS = $(shell find $(BUILD_DIR) -type f -name "*.o")
 ISO_DIR = isodir
 OS = sammyos
