@@ -36,7 +36,7 @@ boot_page_table_2:
 .type _start, @function
 _start:
     # Physical address of the first page table
-    movl $(boot_page_table_1 - 0xC0000000), %edi
+    movl $(boot_page_table_1), %edi
     movl $0, %esi
     movl $2048, %ecx
 
@@ -45,7 +45,7 @@ _start:
     # info structure.
     # Map up to end of kernel plus 3MB to cover for initial kernel
     # memory pool.
-    cmpl $(_end_kernel - 0xC0000000 + 0x3FFFFF), %esi
+    cmpl $(_end_kernel + 0x3FFFFF), %esi
     jge 3f
 
     # Map physical adress as "present" and "writable"
@@ -60,14 +60,14 @@ _start:
 
 3:
     # Map VGA buffer from 0xB8000 to 0xC03FF000
-    movl $(0x000B8000 | 0x003), boot_page_table_1 - 0xC0000000 + 1023 * 4
+    movl $(0x000B8000 | 0x003), boot_page_table_1 + 1023 * 4
 
-    movl $(boot_page_table_1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 0
-    movl $(boot_page_table_1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 768 * 4
-    movl $(boot_page_table_1 - 0xC0000000 + 4096 + 0x003), boot_page_directory - 0xC0000000 + 769 * 4
+    movl $(boot_page_table_1 + 0x003), boot_page_directory + 0
+    movl $(boot_page_table_1 + 0x003), boot_page_directory + 768 * 4
+    movl $(boot_page_table_1 + 4096 + 0x003), boot_page_directory + 769 * 4
 
     # Set cr3 to address of boot_page_directory
-    movl $(boot_page_directory - 0xC0000000), %ecx
+    movl $(boot_page_directory), %ecx
     movl %ecx, %cr3
 
     # Enable paging and write-protect bit
